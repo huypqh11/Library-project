@@ -1,9 +1,5 @@
 package com.library;
-
-import com.library.Book;
-import com.library.History;
-import test.Client;
-
+import com.library.*;
 import java.util.Date;
 
 class Statistics extends History {
