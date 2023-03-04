@@ -1,6 +1,6 @@
-package com.library;
+package com.library.search;
 
-import com.library.Book;
+import com.library.book.Book;
 
 import java.util.*;
 

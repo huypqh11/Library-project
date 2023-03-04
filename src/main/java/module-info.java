@@ -1,4 +1,4 @@
-module com.example.library {
+module com.library {
     requires javafx.controls;
     requires javafx.fxml;
         requires javafx.web;
@@ -10,6 +10,6 @@ module com.example.library {
             requires org.kordamp.bootstrapfx.core;
             requires com.almasb.fxgl.all;
 
-    opens com.example.library to javafx.fxml;
-    exports com.example.library;
+    opens com.library.app.library to javafx.fxml;
+    exports com.library.app.library;
 }
