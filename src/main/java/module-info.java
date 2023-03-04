@@ -9,6 +9,8 @@ module com.library {
             requires org.kordamp.ikonli.javafx;
             requires org.kordamp.bootstrapfx.core;
             requires com.almasb.fxgl.all;
+    requires java.desktop;
+    requires java.sql;
 
     opens com.library.app.library to javafx.fxml;
     exports com.library.app.library;
