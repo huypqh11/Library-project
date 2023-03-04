@@ -23,54 +23,6 @@ public class Borrowing{
         this.price = price;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
-
-    public Client getBorrower() {
-        return borrower;
-    }
-
-    public void setBorrower(Client borrower) {
-        this.borrower = borrower;
-    }
-
-    public Date getDateBorrowed() {
-        return dateBorrowed;
-    }
-
-    public void setDateBorrowed(Date dateBorrowed) {
-        this.dateBorrowed = dateBorrowed;
-    }
-
-    public Date getDateGiveBack() {
-        return dateGiveBack;
-    }
-
-    public void setDateGiveBack(Date dateGiveBack) {
-        this.dateGiveBack = dateGiveBack;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
     public void create(){
 
     }

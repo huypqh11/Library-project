@@ -10,6 +10,7 @@ public class User {
     protected String phoneNumber;
     protected String emailAddress;
     protected Date timeCreate;
+    protected String gender;
 
     protected User(String id, String fullname, String phoneNumber, String emailAddress, Date timeCreate){
         this.id = id;
@@ -29,4 +30,6 @@ public class User {
 
 
 }
+
+
 
