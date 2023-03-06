@@ -1,7 +1,4 @@
-package com.library.history;
-
-import com.library.borrowing.Borrowing;
-import com.library.user.client.Client;
+package com.library.model;
 
 import java.util.*;
 

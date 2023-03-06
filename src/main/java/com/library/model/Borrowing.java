@@ -1,7 +1,4 @@
-package com.library.borrowing;
-
-import com.library.user.client.Client;
-import com.library.book.Book;
+package com.library.model;
 
 import java.util.*;
 

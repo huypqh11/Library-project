@@ -1,7 +1,4 @@
-package com.library.user.librarian;
-
-import com.library.book.Book;
-import com.library.user.User;
+package com.library.model;
 
 import java.util.Date;
 

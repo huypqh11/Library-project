@@ -12,6 +12,6 @@ module com.library {
     requires java.desktop;
     requires java.sql;
 
-    opens com.library.app.library to javafx.fxml;
-    exports com.library.app.library;
+    opens com.library to javafx.fxml;
+    exports com.library.app;
 }

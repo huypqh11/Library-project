@@ -1,6 +1,4 @@
-package com.library.user;
-
-import com.library.book.Book;
+package com.library.model;
 
 import java.util.*;
 

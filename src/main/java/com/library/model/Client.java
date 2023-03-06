@@ -1,7 +1,4 @@
-package com.library.user.client;
-
-import com.library.book.Book;
-import com.library.user.User;
+package com.library.model;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.library.search;
+package com.library.model;
 
 import java.util.*;
 

@@ -1,10 +1,10 @@
-package com.library.app.library;
+package com.library.app;
+import com.library.libManagement.LibManagement;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 public class app extends Application {
 
 
@@ -18,6 +18,9 @@ public class app extends Application {
 //    }
     }
     public static void main(String[] args) {
-        launch();
+        LibManagement.createDB();
+        LibManagement lib = new LibManagement();
+
+        lib.login();
     }
 }
