@@ -40,10 +40,40 @@ public class LibManagement{
         SignIn.setBounds(230, 554, 100, 20);
         SignIn.setBackground(Color.decode("#FAF9F6"));
         SignIn.setForeground(Color.decode("#9CC3E3"));
-        SignIn.addActionListener(new ActionListener() {
+        c.add(SignIn);
+
+        JLabel username = new JLabel("Username:");
+        username.setBounds(60, 200, 150, 30);
+        username.setFont(new Font("Arial", Font.BOLD, 25));
+        username.setOpaque(true);
+        username.setBackground(Color.decode("#FAF9F6"));
+        c.add(username);
+
+        JTextField SDT1 = new JTextField();
+        SDT1.setBounds(65, 240, 320, 50);
+        SDT1.setFont(new Font("Arial", Font.BOLD, 28));
+        c.add(SDT1);
+
+        JLabel Pass = new JLabel("Password:");
+        Pass.setBounds(60, 320, 150, 30);
+        Pass.setFont(new Font("Arial", Font.BOLD, 25));
+        Pass.setOpaque(true);
+        Pass.setBackground(Color.decode("#FAF9F6"));
+        c.add(Pass);
+
+        JPasswordField SDT = new JPasswordField();
+        SDT.setBounds(65, 360, 320, 50);
+        SDT.setFont(new Font("Arial", Font.BOLD, 28));
+        c.add(SDT);
+
+        JButton Sign = new JButton("Sign In");
+        Sign.setBounds(70, 450, 320, 50);
+        Sign.setBackground(Color.decode("#ADDCF4"));
+        Sign.setForeground(Color.decode("#FAF9F6"));
+        Sign.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String strUsername = tfUsername.getText();
-                String strPassword = tfPassword.getText();
+                String strUsername = SDT1.getText();
+                String strPassword = SDT.getText();
                 
                 if (strUsername.equals("")){ //If have no username
                     JOptionPane.showMessageDialog(null, "Enter the username");
@@ -85,36 +115,6 @@ public class LibManagement{
                 }
             }
         });
-        c.add(SignIn);
-
-        JLabel username = new JLabel("Username:");
-        username.setBounds(60, 200, 150, 30);
-        username.setFont(new Font("Arial", Font.BOLD, 25));
-        username.setOpaque(true);
-        username.setBackground(Color.decode("#FAF9F6"));
-        c.add(username);
-
-        JTextField SDT1 = new JTextField();
-        SDT1.setBounds(65, 240, 320, 50);
-        SDT1.setFont(new Font("Arial", Font.BOLD, 28));
-        c.add(SDT1);
-
-        JLabel Pass = new JLabel("Password:");
-        Pass.setBounds(60, 320, 150, 30);
-        Pass.setFont(new Font("Arial", Font.BOLD, 25));
-        Pass.setOpaque(true);
-        Pass.setBackground(Color.decode("#FAF9F6"));
-        c.add(Pass);
-
-        JPasswordField SDT = new JPasswordField();
-        SDT.setBounds(65, 360, 320, 50);
-        SDT.setFont(new Font("Arial", Font.BOLD, 28));
-        c.add(SDT);
-
-        JButton Sign = new JButton("Sign In");
-        Sign.setBounds(70, 450, 320, 50);
-        Sign.setBackground(Color.decode("#ADDCF4"));
-        Sign.setForeground(Color.decode("#FAF9F6"));
         c.add(Sign);
 
         JRadioButton Reme = new JRadioButton("Remember me");
