@@ -40,6 +40,51 @@ public class LibManagement{
         SignIn.setBounds(230, 554, 100, 20);
         SignIn.setBackground(Color.decode("#FAF9F6"));
         SignIn.setForeground(Color.decode("#9CC3E3"));
+        SignIn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String strUsername = tfUsername.getText();
+                String strPassword = tfPassword.getText();
+                
+                if (strUsername.equals("")){ //If have no username
+                    JOptionPane.showMessageDialog(null, "Enter the username");
+                } else if (strPassword.equals("")){ //If have no password
+                    JOptionPane.showMessageDialog(null, "Enter the password");
+                } else {
+                    Connection connection = connect();
+                    try{
+                        Statement stmt = connection.createStatement();
+
+                        stmt.executeUpdate("USE " + DATABASE_NAME);
+                    
+                        String strQuery = "SELECT * FROM USER WHERE Username = '" + strUsername + "' AND Password = '" + strPassword + "'";
+
+                        ResultSet resultSet = stmt.executeQuery(strQuery);
+
+                        if (resultSet.next() == false){
+                            System.out.println("User does not exist");
+                            JOptionPane.showMessageDialog(null, "Wrong username or password!");
+                        } else {
+                            //Clear frame
+                            frame.dispose();
+
+                            do {
+                                int iTypeUser = resultSet.getInt("TypeUser");
+
+                                if (iTypeUser == 0){
+                                    logout();
+                                } else {
+                                    register();
+                                }
+                            } while (resultSet.next());
+                        }
+                         
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                    
+                }
+            }
+        });
         c.add(SignIn);
 
         JLabel username = new JLabel("Username:");
@@ -87,11 +132,21 @@ public class LibManagement{
     }
 
     public void logout(){
+        JFrame frame = new JFrame("Logout");
 
+        frame.setSize(400, 180);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 
     public void register(){
-        
+        JFrame frame = new JFrame("Register");
+
+        frame.setSize(400, 180);
+        frame.setLayout(null);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 
     public void addLibrarian(){
