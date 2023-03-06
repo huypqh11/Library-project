@@ -60,7 +60,7 @@ public class LibManagement{
             while(resultSet.next()){
                 String dbname = resultSet.getString(1);
                 
-                if (dbname == database_name){
+                if (dbname == DATABASE_NAME){
                     resultSet.close();
                     return;
                 }
@@ -70,9 +70,9 @@ public class LibManagement{
             Statement stmt = connection.createStatement();
 
             //Create database
-            stmt.executeUpdate("CREATE DATABASE " + database_name);
+            stmt.executeUpdate("CREATE DATABASE " + DATABASE_NAME);
             //Use database
-            stmt.executeUpdate("USE " + database_name);
+            stmt.executeUpdate("USE " + DATABASE_NAME);
 
             //Set commands
             String strCreateTableUser = "CREATE TABLE USER(" +
@@ -89,30 +89,31 @@ public class LibManagement{
                                     "Email VARCHAR(255), " +
                                     "Gender NVARCHAR(10) CHECK (Gender = 'Male' OR Gender = 'Female' OR Gender = 'Other'), " +
                                     "Department VARCHAR(255), " +
-                                    "CreatedDate DATE DEFAULT GETDATE(), " +
+                                    "CreatedDate DATE DEFAULT (CURRENT_DATE), " +
                                     "Username VARCHAR(255), " +
                                     "PRIMARY KEY (LID));";
             stmt.executeUpdate(strCreateTableLibrarian);
 
             String strCreateTableClient = "CREATE TABLE CLIENT(" + 
                                     "CID VARCHAR(255) NOT NULL, " +
-                                    "Fullname NVARCHAR(50), " +
+                                    "Fullname VARCHAR(50), " +
                                     "PhoneNum VARCHAR(10), " +
                                     "Email VARCHAR(255), " + 
-                                    "Address NVARCHAR(100), " +
+                                    "Gender VARCHAR(10) CHECK (Gender = 'Male' OR Gender = 'Female' OR Gender = 'Other'), " +
+                                    "Address VARCHAR(100), " +
                                     "BankAccount VARCHAR(100), " +
-                                    "BankName VARCHAR(100)" +
-                                    "CreatedDate DATE DEFAULT GETDATE(), " +
+                                    "BankName VARCHAR(100), " +
+                                    "CreatedDate DATE DEFAULT (CURRENT_DATE), " +
                                     "Username VARCHAR(255), " +
                                     "PRIMARY KEY (CID));";
             stmt.executeUpdate(strCreateTableClient);
 
             String strCreateTableBook = "CREATE TABLE BOOK(" +
                                     "BID VARCHAR(255) NOT NULL, " + 
-                                    "Tittle NVARCHAR(50), " +
-                                    "Author NVARCHAR(50), " +
-                                    "PublishingHouse NVARCHAR(50), " +
-                                    "Year DATE, " +
+                                    "Tittle VARCHAR(50), " +
+                                    "Author VARCHAR(50), " +
+                                    "PublishingHouse VARCHAR(50), " +
+                                    "PostedYear DATE, " +
                                     "Genre VARCHAR(50), " +
                                     "HasLeft int DEFAULT 0, " +
                                     "Place VARCHAR(50), " +
@@ -123,8 +124,8 @@ public class LibManagement{
                                     "BID VARCHAR(255) NOT NULL, " +
                                     "CID VARCHAR(255) NOT NULL, " +
                                     "Rate int DEFAULT 0, " +
-                                    "Comment NVARCHAR(255), " +
-                                    "ReviewedDate DATETIME DEFAULT GETDATE(), " +
+                                    "Comment VARCHAR(255), " +
+                                    "ReviewedDate DATETIME DEFAULT (CURRENT_DATE), " +
                                     "PRIMARY KEY (BID, CID));";
             stmt.executeUpdate(strCreateTableReview);
 
@@ -144,7 +145,7 @@ public class LibManagement{
             String strCreateTableTransaction = "CREATE TABLE TRANSACTION(" +
                                     "TID VARCHAR(255) NOT NULL, " +
                                     "CID VARCHAR(255) NOT NULL, " +
-                                    "BorrowedDate DATE DEFAULT GETDATE(), " +
+                                    "BorrowedDate DATE DEFAULT (CURRENT_DATE), " +
                                     "ReturnDate DATE, " + 
                                     "TotalPrice int, " +
                                     "Quantity int, " +
@@ -152,12 +153,18 @@ public class LibManagement{
             stmt.executeUpdate(strCreateTableTransaction);
 
             String strCreateTableDetailTrans = "CREATE TABLE DETAILTRANS(" +
+                                    "TID VARCHAR(255) NOT NULL, " +
                                     "BID VARCHAR(255) NOT NULL, " +
                                     "Price int NOT NULL, " +
                                     "Routine int NOT NULL, " +
-                                    "TID VARCHAR(255) NOT NULL, " +
-                                    "PRIMARY KEY (BID));";
+                                    "PRIMARY KEY (TID, BID));";
             stmt.executeUpdate(strCreateTableDetailTrans);
+
+            String strUC_Username = "ALTER TABLE LIBRARIAN ADD CONSTRAINT UC_Username UNIQUE (Username)";
+            stmt.executeUpdate(strUC_Username);
+
+            strUC_Username = "ALTER TABLE CLIENT ADD CONSTRAINT UC_Username UNIQUE (Username)";
+            stmt.executeUpdate(strUC_Username);
 
             String strFK_Librarian_User = "ALTER TABLE LIBRARIAN " + 
                                     "ADD CONSTRAINT FK_LIBRARIAN_USER " +
@@ -203,6 +210,20 @@ public class LibManagement{
                                     "ADD CONSTRAINT FK_DETAILTRANS_TRANSACTION " +
                                     "FOREIGN KEY (TID) REFERENCES TRANSACTION(TID)";
             stmt.executeUpdate(strFK_DetailTrans_Transaction);
+
+            //Insert the first account of librarian into the database
+            String strSave_LibAccount = "INSERT INTO USER VALUES ('librarian1', '12345', 0)";
+            stmt.executeUpdate(strSave_LibAccount);
+
+            String strSave_AccountInfo = "INSERT INTO LIBRARIAN VALUES ('L000', 'Ma Cao', '0981236782', 'macao@gmail.com', 'Male', 'A', 'librarian1')";
+            stmt.executeUpdate(strSave_AccountInfo);
+
+            //Insert some books into the database
+            String strBook = "INSERT INTO BOOK VALUES " +
+                                "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', '2010-04-30', 'Biography', 2, 'Department A - Shelf A00')," +
+                                "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', '2009-06-15', 'Adventure Novels', 5, 'Department B - Shelf A01')," +
+                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', '2016-09-26', 'Encyclopedia', 10, 'Department A - Shelf C05')";
+            stmt.executeUpdate(strBook);
 
             resultSet.close();
         }
