@@ -1,156 +1,577 @@
 package com.library.libManagement;
 
-
-import java.awt.*;
-import javax.swing.*;
+import java.awt.event.*;
 import java.sql.*;
+import javax.swing.*;
+import java.awt.*;
 
-public class LibManagement{
-    public static final String DATABASE_NAME = "LIBMANAGEMENT";
+class LibManagement{
+    public static final String DATABASE_NAME = "libmanagement";
     private String username;
     private String password;
     private int userType;
+    private static JFrame currFrame;
 
-    public void login(){
+    LibManagement(){
+        currFrame = login();
+        currFrame.setVisible(true);
+    }
+
+    public static JFrame getCurrFrame(){
+        return currFrame;
+    }
+
+    public static void setFrame(JFrame frame){
+        currFrame = frame;
+    }
+
+    public JFrame login(){
         JFrame frame = new JFrame("View");
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(1200, 650));
-        frame.getContentPane().setBackground(Color.decode("#FAF9F6"));
+        frame.setPreferredSize(new Dimension(1195, 650));
+        frame.getContentPane().setBackground(Color.decode("#FFFFFF"));
         frame.pack();
-        frame.setLocationRelativeTo(null);
         Container c = frame.getContentPane();
         c.setLayout(null);
-        Font font = new Font("Arial", Font.BOLD, 27);
+        // Font font = new Font("Arial", Font.BOLD, 27);
 
-        JLabel welcom = new JLabel("WELCOME BACK!");
-        welcom.setBounds(40, 50, 250, 30);
-        welcom.setFont(font);
-        welcom.setOpaque(true);
-        welcom.setBackground(Color.decode("#FAF9F6"));
-        c.add(welcom);
+        JButton ButtonAbout = new JButton("About");
+        ButtonAbout.setBounds(65, 74, 75, 30);
+        ButtonAbout.setBackground(Color.decode("#FFFDF6"));
+        c.add(ButtonAbout);
 
-        JLabel dh = new JLabel("Don't have account");
-        dh.setBounds(60, 550, 160, 26);
-        dh.setFont(new Font("Arial", Font.PLAIN, 17));
-        dh.setOpaque(true);
-        dh.setBackground(Color.decode("#FAF9F6"));
-        c.add(dh);
+        JLabel LabelSignIn = new JLabel("Sign In");
+        LabelSignIn.setBounds(180, 74, 85, 30);
+        LabelSignIn.setBackground(Color.decode("#FFFDF6"));
+        LabelSignIn.setForeground(Color.decode("#FF0000"));
+        c.add(LabelSignIn);
 
-        JButton SignIn = new JButton("Sign Up");
-        SignIn.setBounds(230, 554, 100, 20);
-        SignIn.setBackground(Color.decode("#FAF9F6"));
-        SignIn.setForeground(Color.decode("#9CC3E3"));
-        c.add(SignIn);
+        JButton ButtonRegister = new JButton("Register");
+        ButtonRegister.setBounds(265, 74, 85, 30);
+        ButtonRegister.setBackground(Color.decode("#FFFDF6"));
+        ButtonRegister.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                getCurrFrame().dispose();
+                setFrame(register());
+                getCurrFrame().setVisible(true);
+            }
+        });
+        c.add(ButtonRegister);
 
-        JLabel username = new JLabel("Username:");
-        username.setBounds(60, 200, 150, 30);
-        username.setFont(new Font("Arial", Font.BOLD, 25));
-        username.setOpaque(true);
-        username.setBackground(Color.decode("#FAF9F6"));
-        c.add(username);
+        JTextField TextFieldUsername = new JTextField("Enter Username");
+        TextFieldUsername.setBounds(64, 253, 400, 57);
+        TextFieldUsername.setBackground(Color.decode("#D4FAFA"));
+        TextFieldUsername.setFont(new Font("Arial", Font.BOLD, 25));
+        TextFieldUsername.setForeground(Color.decode("#ADAEB3"));
+        TextFieldUsername.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                if (TextFieldUsername.getText().equals("Enter Username")) {
+                    TextFieldUsername.setText("");
+                }
+            }
 
-        JTextField SDT1 = new JTextField();
-        SDT1.setBounds(65, 240, 320, 50);
-        SDT1.setFont(new Font("Arial", Font.BOLD, 28));
-        c.add(SDT1);
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (TextFieldUsername.getText().equals("")) {
+                    TextFieldUsername.setText("Enter Username");
+                }
+            }
+        });
+        c.add(TextFieldUsername);
 
-        JLabel Pass = new JLabel("Password:");
-        Pass.setBounds(60, 320, 150, 30);
-        Pass.setFont(new Font("Arial", Font.BOLD, 25));
-        Pass.setOpaque(true);
-        Pass.setBackground(Color.decode("#FAF9F6"));
-        c.add(Pass);
+        JPasswordField TextFieldPassWord = new JPasswordField("PassWord");
+        TextFieldPassWord.setBounds(64, 343, 400, 57);
+        TextFieldPassWord.setBackground(Color.decode("#D4FAFA"));
+        TextFieldPassWord.setForeground(Color.decode("#ADAEB3"));
+        TextFieldPassWord.setFont(new Font("Arial", Font.BOLD, 25));
+        TextFieldPassWord.addFocusListener(new FocusListener() {
+            public void focusGained(FocusEvent e) {
+                if (TextFieldPassWord.getText().equals("PassWord")) {
+                    TextFieldPassWord.setText("");
+                }
+            }
 
-        JPasswordField SDT = new JPasswordField();
-        SDT.setBounds(65, 360, 320, 50);
-        SDT.setFont(new Font("Arial", Font.BOLD, 28));
-        c.add(SDT);
+            // @Override
+            public void focusLost(FocusEvent e) {
+                if (TextFieldPassWord.getText().equals("")) {
+                    TextFieldPassWord.setText("PassWord");
+                }
+            }
+        });
+        c.add(TextFieldPassWord);
 
-        JButton Sign = new JButton("Sign In");
-        Sign.setBounds(70, 450, 320, 50);
-        Sign.setBackground(Color.decode("#ADDCF4"));
-        Sign.setForeground(Color.decode("#FAF9F6"));
-        Sign.addActionListener(new ActionListener() {
+        JButton ButtonForgetPassWord = new JButton("Forget Password?");
+        ButtonForgetPassWord.setBounds(303, 410, 142, 35);
+        ButtonForgetPassWord.setBackground(Color.decode("#FFFDF6"));
+        ButtonForgetPassWord.setForeground(Color.decode("#C7C8C9"));
+        c.add(ButtonForgetPassWord);
+
+        JButton ButtonSignIn = new JButton("Sign In");
+        ButtonSignIn.setBounds(64, 490, 400, 55);
+        ButtonSignIn.setBackground(Color.decode("#000000"));
+        ButtonSignIn.setForeground(Color.decode("#F8F6F7"));
+        ButtonSignIn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String strUsername = SDT1.getText();
-                String strPassword = SDT.getText();
-                
+                String strUsername = TextFieldUsername.getText();
+                String strPassword = String.valueOf(TextFieldPassWord.getPassword());
+
                 if (strUsername.equals("")){ //If have no username
                     JOptionPane.showMessageDialog(null, "Enter the username");
                 } else if (strPassword.equals("")){ //If have no password
                     JOptionPane.showMessageDialog(null, "Enter the password");
                 } else {
                     Connection connection = connect();
+                    ResultSet resultSet = null;
+                    Statement stmt = null;
+                    if (connection == null){
+                        return;
+                    }
                     try{
-                        Statement stmt = connection.createStatement();
-
-                        stmt.executeUpdate("USE " + DATABASE_NAME);
+                        stmt = connection.createStatement();
                     
                         String strQuery = "SELECT * FROM USER WHERE Username = '" + strUsername + "' AND Password = '" + strPassword + "'";
 
-                        ResultSet resultSet = stmt.executeQuery(strQuery);
+                        resultSet = stmt.executeQuery(strQuery);
 
                         if (resultSet.next() == false){
                             System.out.println("User does not exist");
                             JOptionPane.showMessageDialog(null, "Wrong username or password!");
                         } else {
-                            //Clear frame
-                            frame.dispose();
-
                             do {
                                 int iTypeUser = resultSet.getInt("TypeUser");
 
                                 if (iTypeUser == 0){
-                                    logout();
+                                    getCurrFrame().dispose();
+                                    setFrame(login());
+                                    getCurrFrame().setVisible(true);
                                 } else {
-                                    register();
+                                    getCurrFrame().dispose();
+                                    setFrame(register());
+                                    getCurrFrame().setVisible(true);
                                 }
                             } while (resultSet.next());
                         }
                          
                     } catch (Exception ex){
                         ex.printStackTrace();
+                    } finally {
+                        try {
+                            resultSet.close();
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        try {
+                            stmt.close();
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+
+                        try {
+                            connection.close();
+                        } catch (Exception ex){
+                            ex.printStackTrace();
+                        }
                     }
                     
                 }
             }
         });
-        c.add(Sign);
+        c.add(ButtonSignIn);
 
-        JRadioButton Reme = new JRadioButton("Remember me");
-        Reme.setBounds(70, 415, 120, 20);
-        Reme.setBackground(Color.decode("#FAF9F6"));
-        Reme.setForeground(Color.decode("#86C6EE"));
-        c.add(Reme);
+        JLabel LabelImage = new JLabel();
+        String strImagePath = "a.png"; //The path of image
+        LabelImage.setIcon(new ImageIcon(strImagePath));
+        Dimension size = LabelImage.getPreferredSize();
+        LabelImage.setBounds(593, 179, size.width, size.height);
+        c.add(LabelImage);
 
-        JLabel label = new JLabel();
-        label.setIcon(new ImageIcon("C:\\Users\\SFX14-41G\\eclipse-workspace\\Library project\\src\\main\\java\\com\\library\\libManagement\\a.png"));
-        Dimension size = label.getPreferredSize();
-        label.setBounds(500, 50, size.width, size.height);
-        c.add(label);
-        frame.setVisible(true);
+        JLabel LabelSignInto = new JLabel("Sign In to");
+        LabelSignInto.setBounds(545, 80, 260, 45);
+        LabelSignInto.setFont(new Font("Arial", Font.BOLD, 35));
+        LabelSignInto.setBackground(Color.decode("#FFFFFF"));
+        c.add(LabelSignInto);
+
+        JLabel LabelLibLibrary = new JLabel("Lib Management");
+        LabelLibLibrary.setBounds(555, 128, 260, 45);
+        LabelLibLibrary.setFont(new Font("Arial", Font.BOLD, 35));
+        LabelLibLibrary.setBackground(Color.decode("#FFFFFF"));
+        c.add(LabelLibLibrary);
+
+        return frame;
     }
 
-    public void logout(){
+    public JFrame logout(){
         JFrame frame = new JFrame("Logout");
 
         frame.setSize(400, 180);
         frame.setLayout(null);
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
+        return frame;
     }
 
-    public void register(){
-        JFrame frame = new JFrame("Register");
+    public JFrame register(){
+        JFrame frame = new JFrame("Library register");
+        String strBackgroundPath = "a3.png";
+        Image backgroundImage = Toolkit.getDefaultToolkit().getImage(strBackgroundPath);
+        JPanel PanelBackground = new JPanel() {
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        PanelBackground.setLayout(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(995, 650));
 
-        frame.setSize(400, 180);
-        frame.setLayout(null);
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null);
-    }
+        JLabel labelLibMangement = new JLabel("Lib Management");
+        labelLibMangement.setBounds(175, 45, 260, 26);
+        labelLibMangement.setFont(new Font("Arial", Font.BOLD, 25));
+        PanelBackground.add(labelLibMangement);
 
-    public void addLibrarian(){
+        JPanel PanelRegister = new JPanel();
+        PanelRegister.setBounds(250, 100, 620, 500);
+        PanelRegister.setBackground(Color.decode("#FFFFFF"));
+        PanelRegister.setLayout(null);
+        PanelBackground.add(PanelRegister);
 
+        JLabel ImageLogo = new JLabel();
+        String strLogoPath = "LOGO 1.png";
+        ImageLogo.setIcon(new ImageIcon(strLogoPath));
+        Dimension size = ImageLogo.getPreferredSize();
+        ImageLogo.setBounds(3, 10, size.width, size.height);
+        PanelBackground.add(ImageLogo);
+
+        JLabel LabelRegister = new JLabel("Register");
+        LabelRegister.setBounds(250, 17, 110, 30);
+        LabelRegister.setBackground(Color.decode("#D4FAFA"));
+        LabelRegister.setFont(new Font("Arial", Font.BOLD, 25));
+        LabelRegister.setForeground(Color.decode("#7C8BFF"));
+        PanelRegister.add(LabelRegister);
+
+        JLabel LabelUsername = new JLabel("Username*");
+        LabelUsername.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelUsername.setBackground(Color.decode("#D4FAFA"));
+        LabelUsername.setBounds(14, 50, 120, 15);
+        PanelRegister.add(LabelUsername);
+
+        JTextField TextFieldUserName = new JTextField();
+        TextFieldUserName.setBounds(10, 67, 260, 35);
+        TextFieldUserName.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldUserName);
+
+        JLabel LabelEmail = new JLabel("Email");
+        LabelEmail.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelEmail.setBackground(Color.decode("#D4FAFA"));
+        LabelEmail.setBounds(324, 50, 120, 15);
+        PanelRegister.add(LabelEmail);
+
+        JTextField TextFieldEmail = new JTextField();
+        TextFieldEmail.setBounds(320, 67, 260, 35);
+        TextFieldEmail.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldEmail);
+
+        JLabel LabelPassWord = new JLabel("Password*");
+        LabelPassWord.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelPassWord.setBackground(Color.decode("#D4FAFA"));
+        LabelPassWord.setBounds(14, 108, 120, 15);
+        PanelRegister.add(LabelPassWord);
+
+        JPasswordField PasswordFieldPassWord = new JPasswordField();
+        PasswordFieldPassWord.setBounds(10, 128, 260, 35);
+        PasswordFieldPassWord.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(PasswordFieldPassWord);
+
+        JLabel LabelComfirmPassWord = new JLabel("Confirm Password*");
+        LabelComfirmPassWord.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelComfirmPassWord.setBackground(Color.decode("#D4FAFA"));
+        LabelComfirmPassWord.setBounds(324, 108, 220, 15);
+        PanelRegister.add(LabelComfirmPassWord);
+
+        JPasswordField passwordFieldConfirmPasswordField = new JPasswordField();
+        passwordFieldConfirmPasswordField.setBounds(320, 128, 260, 35);
+        passwordFieldConfirmPasswordField.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(passwordFieldConfirmPasswordField);
+
+        JLabel LabelPhone = new JLabel("Phone Number*");
+        LabelPhone.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelPhone.setBackground(Color.decode("#D4FAFA"));
+        LabelPhone.setBounds(14, 164, 120, 15);
+        PanelRegister.add(LabelPhone);
+
+        JTextField TextFieldPhone = new JTextField();
+        TextFieldPhone.setBounds(10, 183, 260, 35);
+        TextFieldPhone.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldPhone);
+
+        JLabel LabelGender = new JLabel("Gender*");
+        LabelGender.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelGender.setBackground(Color.decode("#D4FAFA"));
+        LabelGender.setBounds(324, 164, 120, 15);
+        PanelRegister.add(LabelGender);
+
+        ButtonGroup buttongroup = new ButtonGroup();
+        JRadioButton RadioButtonMale = new JRadioButton("Male");
+        RadioButtonMale.setBackground(Color.decode("#FFFFFF"));
+        RadioButtonMale.setBounds(334, 177, 50, 40);
+        RadioButtonMale.setHorizontalTextPosition(SwingConstants.CENTER);
+        RadioButtonMale.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttongroup.add(RadioButtonMale);
+        PanelRegister.add(RadioButtonMale);
+
+        JRadioButton RadioButtonFemale = new JRadioButton("Female");
+        RadioButtonFemale.setBackground(Color.decode("#FFFFFF"));
+        RadioButtonFemale.setBounds(434, 177, 52, 40);
+        RadioButtonFemale.setHorizontalTextPosition(SwingConstants.CENTER);
+        RadioButtonFemale.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttongroup.add(RadioButtonFemale);
+        PanelRegister.add(RadioButtonFemale);
+
+        JRadioButton RadioButtonOther = new JRadioButton("Other");
+        RadioButtonOther.setBackground(Color.decode("#FFFFFF"));
+        RadioButtonOther.setSelected(true);
+        RadioButtonOther.setBounds(534, 177, 50, 40);
+        RadioButtonOther.setHorizontalTextPosition(SwingConstants.CENTER);
+        RadioButtonOther.setVerticalTextPosition(SwingConstants.BOTTOM);
+        buttongroup.add(RadioButtonOther);
+        PanelRegister.add(RadioButtonOther);
+
+        JLabel LabelFullName = new JLabel("Full name*");
+        LabelFullName.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelFullName.setBackground(Color.decode("#D4FAFA"));
+        LabelFullName.setBounds(14, 220, 120, 15);
+        PanelRegister.add(LabelFullName);
+
+        JTextField TextFieldFullName = new JTextField();
+        TextFieldFullName.setBounds(10, 243, 570, 35);
+        TextFieldFullName.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldFullName);
+
+        JLabel LabelBankAccount = new JLabel("Bank Account");
+        LabelBankAccount.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelBankAccount.setBackground(Color.decode("#D4FAFA"));
+        LabelBankAccount.setBounds(14, 280, 120, 15);
+        PanelRegister.add(LabelBankAccount);
+
+        JTextField TextFieldBankAccount = new JTextField();
+        TextFieldBankAccount.setBounds(10, 303, 260, 35);
+        TextFieldBankAccount.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldBankAccount);
+
+        JLabel LabelBankName = new JLabel("Bank name");
+        LabelBankName.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelBankName.setBackground(Color.decode("#D4FAFA"));
+        LabelBankName.setBounds(324, 280, 120, 15);
+        PanelRegister.add(LabelBankName);
+
+        JTextField TextFieldBankName = new JTextField();
+        TextFieldBankName.setBounds(320, 303, 260, 35);
+        TextFieldBankName.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldBankName);
+
+        JLabel LabelAddress = new JLabel("Address");
+        LabelAddress.setFont(new Font("Arial", Font.PLAIN, 12));
+        LabelAddress.setBackground(Color.decode("#D4FAFA"));
+        LabelAddress.setBounds(14, 340, 120, 15);
+        PanelRegister.add(LabelAddress);
+
+        JTextField TextFieldAddress = new JTextField();
+        TextFieldAddress.setBounds(10, 365, 570, 35);
+        TextFieldAddress.setBackground(Color.decode("#F0F2E4"));
+        PanelRegister.add(TextFieldAddress);
+
+        JButton ButtonRegister = new JButton("Register");
+        ButtonRegister.setBackground(Color.decode("#87C7F1"));
+        ButtonRegister.setForeground(Color.decode("#FFFFFF"));
+        ButtonRegister.setBounds(450, 420, 90, 50);
+        ButtonRegister.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                String strUsername = TextFieldUserName.getText();
+                if (strUsername.equals("")){
+                    JOptionPane.showMessageDialog(null, "Has no username!");
+                    return;
+                }
+
+                String strPassword = String.valueOf(PasswordFieldPassWord.getPassword());
+                if (strPassword.equals("")){
+                    JOptionPane.showMessageDialog(null, "Has no password!");
+                    return;
+                }
+
+                String strConfirmedPassword = String.valueOf(passwordFieldConfirmPasswordField.getPassword());
+                if (!strConfirmedPassword.equals(strPassword)){
+                    JOptionPane.showMessageDialog(null, "Not correct password!");
+                    return;
+                }
+
+                String strPhoneNumber = TextFieldPhone.getText();
+                if (strPhoneNumber.equals("")){
+                    JOptionPane.showMessageDialog(null, "Has no phone number!");
+                    return;
+                }
+                // Check if the text is not numeric
+                try {
+                    int num = Integer.parseInt(strPhoneNumber);
+                } catch (NumberFormatException ex){
+                    JOptionPane.showMessageDialog(null, "Not correct phone number!");
+                    return;
+                }
+
+                String strFullName = TextFieldFullName.getText();
+                if (strFullName.equals("")){
+                    JOptionPane.showMessageDialog(null, "Has no full name!");
+                    return;
+                }
+
+                String strBankAccount = TextFieldBankAccount.getText();
+                String strBankName = TextFieldBankName.getText();
+                String strEmail = TextFieldEmail.getText();
+                String strAddress = TextFieldAddress.getText();
+                String strGender = RadioButtonMale.isSelected() ? "Male" : (
+                                RadioButtonFemale.isSelected() ? "Female" : "Other");
+
+                Connection connection = null;
+                PreparedStatement pstmt = null;
+                Statement stmt = null;
+                ResultSet rs = null;
+
+                try {
+                    connection = connect();
+
+                    //Check if Username existed
+                    String strQuerry = "SELECT * FROM User WHERE Username = '" + strUsername + "';";
+                    stmt = connection.createStatement();
+                    rs = stmt.executeQuery(strQuerry);
+                    
+
+
+                    if (rs.next() == true){
+                        JOptionPane.showMessageDialog(null, "Existed Username!");
+                        try {
+                            rs.close();
+                        } catch (SQLException ex){
+                            ex.printStackTrace();
+                        }
+    
+                        try {
+                            stmt.close();
+                        } catch (SQLException ex){
+                            ex.printStackTrace();
+                        }
+
+                        try {
+                            connection.close();
+                        } catch (SQLException ex){
+                            ex.printStackTrace();
+                        }
+
+                        return;
+                    }
+                } catch (SQLException ex){
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        rs.close();
+                    } catch (SQLException e1){
+                        e1.printStackTrace();
+                    }
+
+                    try {
+                        stmt.close();
+                    } catch (SQLException e1){
+                        e1.printStackTrace();
+                    }
+
+                    try {
+                        connection.close();
+                    } catch (SQLException e1){
+                        e1.printStackTrace();
+                    }
+                }
+
+                try {
+                    connection = connect();
+
+                    //Check if Username existed
+                    connection.setAutoCommit(false);
+
+                    //Insert data into User Table
+                    String strQuerry = "INSERT INTO User (Username, Password) VALUES (?, ?)";
+                    pstmt = connection.prepareStatement(strQuerry);
+                    pstmt.setString(1, strUsername);
+                    pstmt.setString(2, strPassword);
+                    pstmt.executeUpdate();
+
+                    //Insert data into Client Table
+                    strQuerry = "INSERT INTO Client (Fullname, PhoneNum, Email, Gender, Address, BankAccount, BankName, Username) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    pstmt = connection.prepareStatement(strQuerry);
+                    pstmt.setString(1, strFullName);
+                    pstmt.setString(2, strPhoneNumber);
+                    pstmt.setString(3, strEmail);
+                    pstmt.setString(4, strGender);
+                    pstmt.setString(5, strAddress);
+                    pstmt.setString(6, strBankAccount);
+                    pstmt.setString(7, strBankName);
+                    pstmt.setString(8, strUsername);
+                    pstmt.executeUpdate();
+
+                    connection.commit();  
+                    
+                    //Back to login
+                    JOptionPane.showMessageDialog(null, "Signup Success! Back to Login");
+                    getCurrFrame().dispose();
+                    setFrame(login());
+                    getCurrFrame().setVisible(true);
+                } catch (SQLException ex) {
+                    try {
+                        connection.rollback();
+                    } catch (SQLException e1) {
+                        e1.printStackTrace();
+                    }
+
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Registration failed!");
+                } finally{
+                    try {
+                        stmt.close();
+                    } catch (SQLException ex){
+                        ex.printStackTrace();
+                    }
+
+                    try {
+                        pstmt.close();
+                    } catch (SQLException ex){
+                        ex.printStackTrace();
+                    }
+
+                    try {
+                        connection.close();
+                    } catch (SQLException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        PanelRegister.add(ButtonRegister);
+
+        JButton ButtonBackToLogin = new JButton("Back to login");
+        ButtonBackToLogin.setBackground(Color.decode("#87C7F1"));
+        ButtonBackToLogin.setForeground(Color.decode("#FFFFFF"));
+        ButtonBackToLogin.setBounds(110, 420, 130, 50);
+        ButtonBackToLogin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                getCurrFrame().dispose();
+                setFrame(login());
+                getCurrFrame().setVisible(true);
+            }
+        });
+        PanelRegister.add(ButtonBackToLogin);
+
+        frame.setContentPane(PanelBackground);
+        frame.pack();
+
+        return frame;
     }
 
     public static Connection connect()
@@ -158,10 +579,11 @@ public class LibManagement{
         try {
             String user = "root";
             String pw = "root";
+            String path = "jdbc:mysql://localhost:3306/" + DATABASE_NAME;
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             //System.out.println("Loaded driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/mysql?user=" + user + "&password= " + pw);
+            Connection con = DriverManager.getConnection(path, user, pw);
             //System.out.println("Connected to MySQL");
             return con;
         } 
@@ -171,22 +593,38 @@ public class LibManagement{
         return null;
     }
 
-    public static void createDB(){
+    public static void createDB() throws SQLException{
+        Connection connection = null;
+        ResultSet resultSet = null;
+        Statement stmt = null;
         try{
-            Connection connection = connect();
-            ResultSet resultSet = connection.getMetaData().getCatalogs();
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost/mysql?user=root&password=root");
+            resultSet = connection.getMetaData().getCatalogs();
 
             while(resultSet.next()){
+                //Get database name
                 String dbname = resultSet.getString(1);
                 
-                if (dbname == DATABASE_NAME){
-                    resultSet.close();
+                //If database existed, return this
+                if (dbname.equals(DATABASE_NAME)){
+                    try {
+                        resultSet.close();
+                    } catch(Exception ex){
+                        ex.printStackTrace();
+                    }
+
+                    try {
+                        connection.close();
+                    } catch (Exception ex){
+                        ex.printStackTrace();
+                    }
                     return;
                 }
                 
             }
-
-            Statement stmt = connection.createStatement();
+            connection.setAutoCommit(false);
+            stmt = connection.createStatement();
 
             //Create database
             stmt.executeUpdate("CREATE DATABASE " + DATABASE_NAME);
@@ -202,7 +640,7 @@ public class LibManagement{
             stmt.executeUpdate(strCreateTableUser);
 
             String strCreateTableLibrarian = "CREATE TABLE LIBRARIAN(" + 
-                                    "LID VARCHAR(255) NOT NULL, " + 
+                                    "LID VARCHAR(5) NOT NULL, " + 
                                     "Fullname NVARCHAR(50), " +
                                     "PhoneNum VARCHAR(10), " + 
                                     "Email VARCHAR(255), " +
@@ -214,7 +652,7 @@ public class LibManagement{
             stmt.executeUpdate(strCreateTableLibrarian);
 
             String strCreateTableClient = "CREATE TABLE CLIENT(" + 
-                                    "CID VARCHAR(255) NOT NULL, " +
+                                    "CID VARCHAR(5) NOT NULL, " +
                                     "Fullname VARCHAR(50), " +
                                     "PhoneNum VARCHAR(10), " +
                                     "Email VARCHAR(255), " + 
@@ -232,24 +670,25 @@ public class LibManagement{
                                     "Tittle VARCHAR(50), " +
                                     "Author VARCHAR(50), " +
                                     "PublishingHouse VARCHAR(50), " +
-                                    "PostedYear DATE, " +
+                                    "PostedYear INT, " +
                                     "Genre VARCHAR(50), " +
                                     "HasLeft int DEFAULT 0, " +
                                     "Place VARCHAR(50), " +
+                                    "PathImage VARCHAR(50), " +
                                     "PRIMARY KEY (BID));";
             stmt.executeUpdate(strCreateTableBook);
             
             String strCreateTableReview = "CREATE TABLE REVIEW(" +
                                     "BID VARCHAR(255) NOT NULL, " +
-                                    "CID VARCHAR(255) NOT NULL, " +
-                                    "Rate int DEFAULT 0, " +
+                                    "CID VARCHAR(5) NOT NULL, " +
+                                    "Rate int DEFAULT 0 CHECK (0 <= Rate && Rate <= 5), " +
                                     "Comment VARCHAR(255), " +
                                     "ReviewedDate DATETIME DEFAULT (CURRENT_DATE), " +
-                                    "PRIMARY KEY (BID, CID));";
+                                    "PRIMARY KEY (BID, CID, ReviewedDate));";
             stmt.executeUpdate(strCreateTableReview);
 
             String strCreateTableInteresting = "CREATE TABLE INTERESTING(" +
-                                    "CID VARCHAR(255) NOT NULL, " +
+                                    "CID VARCHAR(5) NOT NULL, " +
                                     "BID VARCHAR(255) NOT NULL, " +
                                     "PRIMARY KEY (CID, BID));";
             stmt.executeUpdate(strCreateTableInteresting);
@@ -263,7 +702,7 @@ public class LibManagement{
                                 
             String strCreateTableTransaction = "CREATE TABLE TRANSACTION(" +
                                     "TID VARCHAR(255) NOT NULL, " +
-                                    "CID VARCHAR(255) NOT NULL, " +
+                                    "CID VARCHAR(5) NOT NULL, " +
                                     "BorrowedDate DATE DEFAULT (CURRENT_DATE), " +
                                     "ReturnDate DATE, " + 
                                     "TotalPrice int, " +
@@ -274,80 +713,115 @@ public class LibManagement{
             String strCreateTableDetailTrans = "CREATE TABLE DETAILTRANS(" +
                                     "TID VARCHAR(255) NOT NULL, " +
                                     "BID VARCHAR(255) NOT NULL, " +
-                                    "Price int NOT NULL, " +
-                                    "Routine int NOT NULL, " +
+                                    "Status varchar(10) CHECK (Status = 'Borrowing' OR Status = 'Returned' OR Status = null), " +
                                     "PRIMARY KEY (TID, BID));";
             stmt.executeUpdate(strCreateTableDetailTrans);
 
-            String strUC_Username = "ALTER TABLE LIBRARIAN ADD CONSTRAINT UC_Username UNIQUE (Username)";
+            //Generate triggers to create auto ID which is customized
+            String strTrigger_CustomID = "CREATE TRIGGER librarian_insert_trigger BEFORE INSERT ON LIBRARIAN " +
+                                    "FOR EACH ROW SET new.LID = CONCAT('L', LPAD((SELECT count(*) from LIBRARIAN), 4, '0'));";
+            stmt.executeUpdate(strTrigger_CustomID);
+
+            strTrigger_CustomID = "CREATE TRIGGER client_insert_trigger BEFORE INSERT ON CLIENT " +
+                                    "FOR EACH ROW SET new.CID = CONCAT('C', LPAD((SELECT count(*) from CLIENT), 4, '0'));";
+            stmt.executeUpdate(strTrigger_CustomID);
+
+            strTrigger_CustomID = "CREATE TRIGGER trans_insert_trigger BEFORE INSERT ON TRANSACTION " +
+                                    "FOR EACH ROW SET new.TID = CONCAT('T', LPAD((SELECT count(*) from TRANSACTION), 4, '0'));";
+            stmt.executeUpdate(strTrigger_CustomID);            
+
+            //Generate UNIQUE fields
+            String strUC_Username = "ALTER TABLE LIBRARIAN ADD CONSTRAINT UC_Username UNIQUE (Username);";
             stmt.executeUpdate(strUC_Username);
 
-            strUC_Username = "ALTER TABLE CLIENT ADD CONSTRAINT UC_Username UNIQUE (Username)";
+            strUC_Username = "ALTER TABLE CLIENT ADD CONSTRAINT UC_Username UNIQUE (Username);";
             stmt.executeUpdate(strUC_Username);
 
+            //Generate foreign keys
             String strFK_Librarian_User = "ALTER TABLE LIBRARIAN " + 
                                     "ADD CONSTRAINT FK_LIBRARIAN_USER " +
-                                    "FOREIGN KEY (Username) REFERENCES USER(Username)";
+                                    "FOREIGN KEY (Username) REFERENCES USER(Username);";
             stmt.executeUpdate(strFK_Librarian_User);
 
             String strFK_Client_User = "ALTER TABLE CLIENT " +
                                     "ADD CONSTRAINT FK_CLIENT_USER " +
-                                    "FOREIGN KEY (Username) REFERENCES USER(Username)";
+                                    "FOREIGN KEY (Username) REFERENCES USER(Username);";
             stmt.executeUpdate(strFK_Client_User);
 
             String strFK_Review_Book = "ALTER TABLE REVIEW " +
                                     "ADD CONSTRAINT FK_REVIEW_BOOK " +
-                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID)";
+                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID);";
             stmt.executeUpdate(strFK_Review_Book);
 
             String strFK_Review_Client = "ALTER TABLE REVIEW " +
                                     "ADD CONSTRAINT FK_REVIEW_CLIENT " +
-                                    "FOREIGN KEY (CID) REFERENCES CLIENT(CID)";
+                                    "FOREIGN KEY (CID) REFERENCES CLIENT(CID);";
             stmt.executeUpdate(strFK_Review_Client);
 
             String strFK_Interesting_Client = "ALTER TABLE INTERESTING " +
                                     "ADD CONSTRAINT FK_INTERESTING_CLIENT " +
-                                    "FOREIGN KEY (CID) REFERENCES CLIENT(CID)";
+                                    "FOREIGN KEY (CID) REFERENCES CLIENT(CID);";
             stmt.executeUpdate(strFK_Interesting_Client);
 
             String strFK_Interesting_Book = "ALTER TABLE INTERESTING " +
                                     "ADD CONSTRAINT FK_INTERESTING_BOOK " +
-                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID)";
+                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID);";
             stmt.executeUpdate(strFK_Interesting_Book);
 
             String strFK_Borrowing_Book = "ALTER TABLE BORROWING " +
                                     "ADD CONSTRAINT FK_BORROWING_BOOK " +
-                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID)";
+                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID);";
             stmt.executeUpdate(strFK_Borrowing_Book);
+
+            String strFK_Transaction_Client = "ALTER TABLE TRANSACTION " +
+                                    "ADD CONSTRAINT FK_BORROWING_CLIENT " +
+                                    "FOREIGN KEY (CID) REFERENCES CLIENT(CID);";
+            stmt.executeUpdate(strFK_Transaction_Client);
 
             String strFK_DetailTrans_Book = "ALTER TABLE DETAILTRANS " +
                                     "ADD CONSTRAINT FK_DETAILTRANS_BOOK " +
-                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID)";
+                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID);";
             stmt.executeUpdate(strFK_DetailTrans_Book);
 
             String strFK_DetailTrans_Transaction = "ALTER TABLE DETAILTRANS " +
                                     "ADD CONSTRAINT FK_DETAILTRANS_TRANSACTION " +
-                                    "FOREIGN KEY (TID) REFERENCES TRANSACTION(TID)";
+                                    "FOREIGN KEY (TID) REFERENCES TRANSACTION(TID);";
             stmt.executeUpdate(strFK_DetailTrans_Transaction);
 
             //Insert the first account of librarian into the database
-            String strSave_LibAccount = "INSERT INTO USER VALUES ('librarian1', '12345', 0)";
+            String strSave_LibAccount = "INSERT INTO USER VALUES ('librarian1', '12345', 0);";
             stmt.executeUpdate(strSave_LibAccount);
 
-            String strSave_AccountInfo = "INSERT INTO LIBRARIAN VALUES ('L000', 'Ma Cao', '0981236782', 'macao@gmail.com', 'Male', 'A', '2019-04-30', 'librarian1')";
+            String strSave_AccountInfo = "INSERT INTO LIBRARIAN (Fullname, PhoneNum, Email, Gender, Department, CreatedDate, Username) " +
+                                    "VALUES ('Ma Cao', '0981236782', 'macao@gmail.com', 'Male', 'A', '2019-04-30', 'librarian1')";
             stmt.executeUpdate(strSave_AccountInfo);
 
             //Insert some books into the database
             String strBook = "INSERT INTO BOOK VALUES " +
-                                "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', '2010-04-30', 'Biography', 2, 'Department A - Shelf A00')," +
-                                "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', '2009-06-15', 'Adventure Novels', 5, 'Department B - Shelf A01')," +
-                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', '2016-09-26', 'Encyclopedia', 10, 'Department A - Shelf C05')";
+                                "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', 2010, 'Biography', 2, 'Department A - Shelf A00', null)," +
+                                "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', 2009, 'Adventure Novels', 5, 'Department B - Shelf A01', null)," +
+                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', 2016, 'Encyclopedia', 10, 'Department A - Shelf C05', null);";
+
             stmt.executeUpdate(strBook);
 
-            resultSet.close();
-        }
-        catch(Exception e){
+            connection.commit();
+        } catch (SQLException ex){
+            connection.rollback();
+            ex.printStackTrace();
+        } catch(Exception e){
             e.printStackTrace();
+        } finally{
+            try {
+                stmt.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+            try {
+                connection.close();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
         }
     }
 }
