@@ -20,7 +20,5 @@ public class app extends Application {
     public static void main(String[] args) {
         LibManagement.createDB();
         LibManagement lib = new LibManagement();
-
-        lib.login();
     }
 }
