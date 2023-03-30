@@ -800,9 +800,58 @@ class LibManagement{
             String strBook = "INSERT INTO BOOK VALUES " +
                                 "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', 2010, 'Biography', 2, 'Department A - Shelf A00', null)," +
                                 "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', 2009, 'Adventure Novels', 5, 'Department B - Shelf A01', null)," +
-                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', 2016, 'Encyclopedia', 10, 'Department A - Shelf C05', null);";
-
+                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', 2016, 'Encyclopedia', 10, 'Department A - Shelf C05', null)," +
+                                "('DB03003', 'The Shining', 'Stephen King', 'Doubleday', 1977, 'Horror', 6, 'Department D - Shelf B03', null)," +
+                                "('CA02008', 'Pet Sematary', 'Stephen King', 'Doubleday', 1983, 'Horror', 7, 'Department C - Shelf A02', null)," +
+                                "('AD00038', 'Outlander', 'Diana Gabaldon', 'Delacorte Press', 1991, 'Romance', 12, 'Department A - Shelf D00', null)," +
+                                "('BD03015', 'The Notebook', 'Nicholas Sparks', 'Warner Books', 1996, 'Romance', 3, 'Department B - Shelf D03', null)," +
+                                "('CD03039', 'Dune', 'Frank Herbert', 'Chilton Books', 1965, 'Science Fiction', 19, 'Department C - Shelf D03', null)," +
+                                "('DD08062', 'Neuromancer', 'William Gibson', 'Ace Books', 1984, 'Science Fiction', 12, 'Department D - Shelf D08', null)," +
+                                "('AB07072', 'The Happiness Project', 'Gretchen Rubin', 'HarperCollins', 2009, 'Self-help', 3, 'Department A - Shelf B07', null)," +
+                                "('BC08010', 'Jade City', 'Fonda Lee', 'Orbit', 2017, 'Fantasy', 7, 'Department B - Shelf C08', null)," +
+                                "('CC00000', 'The Bone Shard Daughter', 'Andrea Stewart', 'Orbit', 2020, 'Fantasy', 12, 'Department C - Shelf C00', null)," +
+                                "('DC04002', 'The Dutch House', 'Ann Patchett', 'Harper', 2019, 'Drama', 21, 'Department D - Shelf C04', null)," +
+                                "('AC04032', 'A Little Life', 'Hanya Yanagihara', 'Doubleday', 2015, 'Drama', 19, 'Department A - Shelf C04', null)," +
+                                "('BA02047', 'Homie', 'Danez Smith', 'Graywolf Press', 2020, 'Poetry', 5, 'Department B - Shelf A02', null)," +
+                                "('CA01091', 'The Black Maria', 'Aracelis Girmay', 'BOA Editions', 2016, 'Poetry', 8, 'Department C - Shelf A01', null)," +
+                                "('DA07023', 'The Body: A Guide for Occupants', 'Bill Bryson', 'Doubleday', 2019, 'Science', 8, 'Department D - Shelf A07', null)," +
+                                "('AB07043', 'Brief Answers to the Big Questions', 'Stephen Hawking', 'Bantam Press', 2018, 'Science', 8, 'Department A - Shelf B07', null)," +
+                                "('BB03050', 'The Family Upstairs', 'Lisa Jewell', 'Atria Books', 2019, 'Mystery', 15, 'Department B - Shelf B03', null)," +
+                                "('CA03055', 'The Lost Man', 'Jane Harper', 'Flatiron Books', 2018, 'Mystery', 2, 'Department C - Shelf A03', null)," +
+                                "('DD05077', 'The Water Dancer', 'Ta-Nehisi Coates', 'One World', 2019, 'Novel', 6, 'Department D - Shelf D05', null)," +
+                                "('AA05017', 'The Underground Railroad', 'Colson Whitehead', 'Doubleday', 2016, 'Novel', 9, 'Department A - Shelf A05', null)," +
+                                "('BC09026', 'The Cold War: A World History', 'Odd Arne Westad', 'Basic Books', 2017, 'History', 17, 'Department B - Shelf C09', null)," +
+                                "('CC09087', 'Stalin: Waiting for Hitler, 1929-1941', 'Stephen Kotkin', 'Penguin Press', 2017, 'History', 10, 'Department C - Shelf C09', null)," +
+                                "('DA03000', 'Educated', 'Stephen Kotkin', 'Random House', 2018, 'Memoir', 3, 'Department D - Shelf A03', null);";
             stmt.executeUpdate(strBook);
+
+            String strBorrowing = "INSERT INTO BORROWING(BID, Price, Routine) VALUES " + 
+                                "('AA00000', 15000, 10)," +
+                                "('BA01099', 14000, 4)," +
+                                "('AC05014', 6000, 6)," +
+                                "('DB03003', 21000, 12)," +
+                                "('CA02008', 5000, 7)," +
+                                "('AD00038', 23000, 3)," +
+                                "('BD03015', 18000, 8)," +
+                                "('CD03039', 26000, 6)," +
+                                "('DD08062', 10000, 10)," +
+                                "('AB07072', 7000, 7)," +
+                                "('BC08010', 20000, 5)," +
+                                "('CC00000', 25000, 7)," +
+                                "('DC04002', 15000, 9)," +
+                                "('AC04032', 5000, 3)," +
+                                "('BA02047', 20000, 5)," +
+                                "('CA01091', 10000, 5)," +
+                                "('DA07023', 21000, 9)," +
+                                "('AB07043', 7000, 6)," +
+                                "('BB03050', 12000, 4)," +
+                                "('CA03055', 23000, 7)," +
+                                "('DD05077', 25000, 12)," +
+                                "('AA05017', 5000, 3)," +
+                                "('BC09026', 7000, 4)," +
+                                "('CC09087', 17000, 7)," +
+                                "('DA03000', 12000, 10);";
+            stmt.executeUpdate(strBorrowing);
 
             connection.commit();
         } catch (SQLException ex){
