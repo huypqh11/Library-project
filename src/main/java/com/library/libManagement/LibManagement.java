@@ -822,7 +822,7 @@ class LibManagement{
                                 "('AA05017', 'The Underground Railroad', 'Colson Whitehead', 'Doubleday', 2016, 'Novel', 9, 'Department A - Shelf A05', null)," +
                                 "('BC09026', 'The Cold War: A World History', 'Odd Arne Westad', 'Basic Books', 2017, 'History', 17, 'Department B - Shelf C09', null)," +
                                 "('CC09087', 'Stalin: Waiting for Hitler, 1929-1941', 'Stephen Kotkin', 'Penguin Press', 2017, 'History', 10, 'Department C - Shelf C09', null)," +
-                                "('DA03000', 'Educated', 'Stephen Kotkin', 'Random House', 2018, 'Memoir', 3, 'Department D - Shelf A03', null);";
+                                "('DA03000', 'Educated', 'Tara Westover', 'Random House', 2018, 'Memoir', 3, 'Department D - Shelf A03', null);";
             stmt.executeUpdate(strBook);
 
             String strBorrowing = "INSERT INTO BORROWING(BID, Price, Routine) VALUES " + 
