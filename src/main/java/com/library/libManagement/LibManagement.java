@@ -1,18 +1,17 @@
 package com.library.libManagement;
 
+import com.library.model.*;
+
 import java.awt.event.*;
 import java.sql.*;
 import javax.swing.*;
 import java.awt.*;
 
-class LibManagement{
+public class LibManagement{
     public static final String DATABASE_NAME = "libmanagement";
-    private String username;
-    private String password;
-    private int userType;
     private static JFrame currFrame;
 
-    LibManagement(){
+    public LibManagement(){
         currFrame = login();
         currFrame.setVisible(true);
     }
@@ -124,6 +123,7 @@ class LibManagement{
                     Connection connection = connect();
                     ResultSet resultSet = null;
                     Statement stmt = null;
+
                     if (connection == null){
                         return;
                     }
@@ -138,19 +138,52 @@ class LibManagement{
                             System.out.println("User does not exist");
                             JOptionPane.showMessageDialog(null, "Wrong username or password!");
                         } else {
-                            do {
-                                int iTypeUser = resultSet.getInt("TypeUser");
+                            int iTypeUser = resultSet.getInt("TypeUser");
+                            User user = null;
 
-                                if (iTypeUser == 0){
-                                    getCurrFrame().dispose();
-                                    setFrame(login());
-                                    getCurrFrame().setVisible(true);
-                                } else {
-                                    getCurrFrame().dispose();
-                                    setFrame(register());
-                                    getCurrFrame().setVisible(true);
-                                }
-                            } while (resultSet.next());
+                            if (iTypeUser == 0){ //This is a librarian
+                                strQuery = "SELECT * FROM LIBRARIAN WHERE Username = '" + strUsername + "';";
+                                resultSet = stmt.executeQuery(strQuery);
+                                resultSet.next();
+
+                                //Get infos from database
+                                String strID = resultSet.getString(1);
+                                String strFullname = resultSet.getString(2);
+                                String strPhoneNum = resultSet.getString(3);
+                                String strEmail = resultSet.getString(4);
+                                String strGender = resultSet.getString(5);
+                                String strDepartment = resultSet.getString(6);
+                                java.util.Date dateCreatedDate = new java.util.Date(resultSet.getDate(7).getTime());
+                                resultSet.close();
+                                //Set infos to object
+                                user = new Librarian(strID, strFullname, strPhoneNum, strEmail, strGender, dateCreatedDate, strDepartment);
+                                
+                                getCurrFrame().dispose();
+                                setFrame(user.getDashBoard());
+                                getCurrFrame().setVisible(true);
+                            } else { //This is a client
+                                strQuery = "SELECT * FROM CLIENT WHERE Username = '" + strUsername + "';";
+                                resultSet = stmt.executeQuery(strQuery);
+                                resultSet.next();
+
+                                //Get infos from database
+                                String strID = resultSet.getString(1);
+                                String strFullname = resultSet.getString(2);
+                                String strPhoneNum = resultSet.getString(3);
+                                String strEmail = resultSet.getString(4);
+                                String strGender = resultSet.getString(5);
+                                String strAddress = resultSet.getString(6);
+                                String strBankAccount = resultSet.getString(7);
+                                String strBankName = resultSet.getString(8);
+                                java.util.Date dateCreatedDate = new java.util.Date(resultSet.getDate(9).getTime());
+                                //Set infos to object
+                                user = new Client(strID, strFullname, strPhoneNum, strEmail, strGender, dateCreatedDate,
+                                                    strAddress, strBankAccount, strBankName);
+                                
+                                getCurrFrame().dispose();
+                                setFrame(user.getDashBoard());
+                                getCurrFrame().setVisible(true);
+                            }
                         }
                          
                     } catch (Exception ex){
@@ -194,19 +227,13 @@ class LibManagement{
         c.add(LabelSignInto);
 
         JLabel LabelLibLibrary = new JLabel("Lib Management");
-        LabelLibLibrary.setBounds(555, 128, 260, 45);
+        LabelLibLibrary.setBounds(555, 128, 500, 45);
         LabelLibLibrary.setFont(new Font("Arial", Font.BOLD, 35));
         LabelLibLibrary.setBackground(Color.decode("#FFFFFF"));
         c.add(LabelLibLibrary);
 
-        return frame;
-    }
+        frame.setLocationRelativeTo(null);
 
-    public JFrame logout(){
-        JFrame frame = new JFrame("Logout");
-
-        frame.setSize(400, 180);
-        frame.setLayout(null);
         return frame;
     }
 
@@ -225,7 +252,7 @@ class LibManagement{
         frame.setPreferredSize(new Dimension(995, 650));
 
         JLabel labelLibMangement = new JLabel("Lib Management");
-        labelLibMangement.setBounds(175, 45, 260, 26);
+        labelLibMangement.setBounds(175, 45, 300, 26);
         labelLibMangement.setFont(new Font("Arial", Font.BOLD, 25));
         PanelBackground.add(labelLibMangement);
 
@@ -443,8 +470,6 @@ class LibManagement{
                     stmt = connection.createStatement();
                     rs = stmt.executeQuery(strQuerry);
                     
-
-
                     if (rs.next() == true){
                         JOptionPane.showMessageDialog(null, "Existed Username!");
                         try {
@@ -491,8 +516,6 @@ class LibManagement{
 
                 try {
                     connection = connect();
-
-                    //Check if Username existed
                     connection.setAutoCommit(false);
 
                     //Insert data into User Table
@@ -570,6 +593,7 @@ class LibManagement{
 
         frame.setContentPane(PanelBackground);
         frame.pack();
+        frame.setLocationRelativeTo(null);
 
         return frame;
     }
@@ -674,7 +698,7 @@ class LibManagement{
                                     "Genre VARCHAR(50), " +
                                     "HasLeft int DEFAULT 0, " +
                                     "Place VARCHAR(50), " +
-                                    "PathImage VARCHAR(50), " +
+                                    "PathImage VARCHAR(30), " +
                                     "PRIMARY KEY (BID));";
             stmt.executeUpdate(strCreateTableBook);
             
@@ -682,9 +706,7 @@ class LibManagement{
                                     "BID VARCHAR(255) NOT NULL, " +
                                     "CID VARCHAR(5) NOT NULL, " +
                                     "Rate int DEFAULT 0 CHECK (0 <= Rate && Rate <= 5), " +
-                                    "Comment VARCHAR(255), " +
-                                    "ReviewedDate DATETIME DEFAULT (CURRENT_DATE), " +
-                                    "PRIMARY KEY (BID, CID, ReviewedDate));";
+                                    "PRIMARY KEY (BID, CID));";
             stmt.executeUpdate(strCreateTableReview);
 
             String strCreateTableInteresting = "CREATE TABLE INTERESTING(" +
@@ -798,31 +820,31 @@ class LibManagement{
 
             //Insert some books into the database
             String strBook = "INSERT INTO BOOK VALUES " +
-                                "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', 2010, 'Biography', 2, 'Department A - Shelf A00', null)," +
-                                "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', 2009, 'Adventure Novels', 5, 'Department B - Shelf A01', null)," +
-                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', 2016, 'Encyclopedia', 10, 'Department A - Shelf C05', null)," +
-                                "('DB03003', 'The Shining', 'Stephen King', 'Doubleday', 1977, 'Horror', 6, 'Department D - Shelf B03', null)," +
-                                "('CA02008', 'Pet Sematary', 'Stephen King', 'Doubleday', 1983, 'Horror', 7, 'Department C - Shelf A02', null)," +
-                                "('AD00038', 'Outlander', 'Diana Gabaldon', 'Delacorte Press', 1991, 'Romance', 12, 'Department A - Shelf D00', null)," +
-                                "('BD03015', 'The Notebook', 'Nicholas Sparks', 'Warner Books', 1996, 'Romance', 3, 'Department B - Shelf D03', null)," +
-                                "('CD03039', 'Dune', 'Frank Herbert', 'Chilton Books', 1965, 'Science Fiction', 19, 'Department C - Shelf D03', null)," +
-                                "('DD08062', 'Neuromancer', 'William Gibson', 'Ace Books', 1984, 'Science Fiction', 12, 'Department D - Shelf D08', null)," +
-                                "('AB07072', 'The Happiness Project', 'Gretchen Rubin', 'HarperCollins', 2009, 'Self-help', 3, 'Department A - Shelf B07', null)," +
-                                "('BC08010', 'Jade City', 'Fonda Lee', 'Orbit', 2017, 'Fantasy', 7, 'Department B - Shelf C08', null)," +
-                                "('CC00000', 'The Bone Shard Daughter', 'Andrea Stewart', 'Orbit', 2020, 'Fantasy', 12, 'Department C - Shelf C00', null)," +
-                                "('DC04002', 'The Dutch House', 'Ann Patchett', 'Harper', 2019, 'Drama', 21, 'Department D - Shelf C04', null)," +
-                                "('AC04032', 'A Little Life', 'Hanya Yanagihara', 'Doubleday', 2015, 'Drama', 19, 'Department A - Shelf C04', null)," +
-                                "('BA02047', 'Homie', 'Danez Smith', 'Graywolf Press', 2020, 'Poetry', 5, 'Department B - Shelf A02', null)," +
-                                "('CA01091', 'The Black Maria', 'Aracelis Girmay', 'BOA Editions', 2016, 'Poetry', 8, 'Department C - Shelf A01', null)," +
-                                "('DA07023', 'The Body: A Guide for Occupants', 'Bill Bryson', 'Doubleday', 2019, 'Science', 8, 'Department D - Shelf A07', null)," +
-                                "('AB07043', 'Brief Answers to the Big Questions', 'Stephen Hawking', 'Bantam Press', 2018, 'Science', 8, 'Department A - Shelf B07', null)," +
-                                "('BB03050', 'The Family Upstairs', 'Lisa Jewell', 'Atria Books', 2019, 'Mystery', 15, 'Department B - Shelf B03', null)," +
-                                "('CA03055', 'The Lost Man', 'Jane Harper', 'Flatiron Books', 2018, 'Mystery', 2, 'Department C - Shelf A03', null)," +
-                                "('DD05077', 'The Water Dancer', 'Ta-Nehisi Coates', 'One World', 2019, 'Novel', 6, 'Department D - Shelf D05', null)," +
-                                "('AA05017', 'The Underground Railroad', 'Colson Whitehead', 'Doubleday', 2016, 'Novel', 9, 'Department A - Shelf A05', null)," +
-                                "('BC09026', 'The Cold War: A World History', 'Odd Arne Westad', 'Basic Books', 2017, 'History', 17, 'Department B - Shelf C09', null)," +
-                                "('CC09087', 'Stalin: Waiting for Hitler, 1929-1941', 'Stephen Kotkin', 'Penguin Press', 2017, 'History', 10, 'Department C - Shelf C09', null)," +
-                                "('DA03000', 'Educated', 'Tara Westover', 'Random House', 2018, 'Memoir', 3, 'Department D - Shelf A03', null);";
+                                "('AA00000', 'Old Path White Clouds', 'Thich Nhat Hanh', 'Phuong Nam', 2010, 'Biography', 2, 'Department A - Shelf A00', 'ImageBooks\\\\AA00000.png')," +
+                                "('BA01099', 'Vingt mille lieues sous les mers', 'Jules Verne', 'Hong Duc', 2009, 'Adventure Novels', 5, 'Department B - Shelf A01', 'ImageBooks\\\\BA01099.png')," +
+                                "('AC05014', 'JUSTICE What is the right thing to do?', 'Michael Sandel', 'Tre', 2016, 'Encyclopedia', 10, 'Department A - Shelf C05', 'ImageBooks\\\\AC05014.png')," +
+                                "('DB03003', 'The Shining', 'Stephen King', 'Doubleday', 1977, 'Horror', 6, 'Department D - Shelf B03', 'ImageBooks\\\\DB03003.png')," +
+                                "('CA02008', 'Pet Sematary', 'Stephen King', 'Doubleday', 1983, 'Horror', 7, 'Department C - Shelf A02', 'ImageBooks\\\\CA02008.png')," +
+                                "('AD00038', 'Outlander', 'Diana Gabaldon', 'Delacorte Press', 1991, 'Romance', 12, 'Department A - Shelf D00', 'ImageBooks\\\\AD00038.png')," +
+                                "('BD03015', 'The Notebook', 'Nicholas Sparks', 'Warner Books', 1996, 'Romance', 3, 'Department B - Shelf D03', 'ImageBooks\\\\BD03015.png')," +
+                                "('CD03039', 'Dune', 'Frank Herbert', 'Chilton Books', 1965, 'Science Fiction', 19, 'Department C - Shelf D03', 'ImageBooks\\\\CD03039.png')," +
+                                "('DD08062', 'Neuromancer', 'William Gibson', 'Ace Books', 1984, 'Science Fiction', 12, 'Department D - Shelf D08', 'ImageBooks\\\\DD08062.png')," +
+                                "('AB07072', 'The Happiness Project', 'Gretchen Rubin', 'HarperCollins', 2009, 'Self-help', 3, 'Department A - Shelf B07', 'ImageBooks\\\\AB07072.png')," +
+                                "('BC08010', 'Jade City', 'Fonda Lee', 'Orbit', 2017, 'Fantasy', 7, 'Department B - Shelf C08', 'ImageBooks\\\\BC08010.png')," +
+                                "('CC00000', 'The Bone Shard Daughter', 'Andrea Stewart', 'Orbit', 2020, 'Fantasy', 12, 'Department C - Shelf C00', 'ImageBooks\\\\CC00000.png')," +
+                                "('DC04002', 'The Dutch House', 'Ann Patchett', 'Harper', 2019, 'Drama', 21, 'Department D - Shelf C04', 'ImageBooks\\\\DC04002.png')," +
+                                "('AC04032', 'A Little Life', 'Hanya Yanagihara', 'Doubleday', 2015, 'Drama', 19, 'Department A - Shelf C04', 'ImageBooks\\\\AC04032.png')," +
+                                "('BA02047', 'Homie', 'Danez Smith', 'Graywolf Press', 2020, 'Poetry', 5, 'Department B - Shelf A02', 'ImageBooks\\\\BA02047.png')," +
+                                "('CA01091', 'The Black Maria', 'Aracelis Girmay', 'BOA Editions', 2016, 'Poetry', 8, 'Department C - Shelf A01', 'ImageBooks\\\\CA01091.png')," +
+                                "('DA07023', 'The Body: A Guide for Occupants', 'Bill Bryson', 'Doubleday', 2019, 'Science', 8, 'Department D - Shelf A07', 'ImageBooks\\\\DA07023.png')," +
+                                "('AB07043', 'Brief Answers to the Big Questions', 'Stephen Hawking', 'Bantam Press', 2018, 'Science', 8, 'Department A - Shelf B07', 'ImageBooks\\\\AB07043.png')," +
+                                "('BB03050', 'The Family Upstairs', 'Lisa Jewell', 'Atria Books', 2019, 'Mystery', 15, 'Department B - Shelf B03', 'ImageBooks\\\\BB03050.png')," +
+                                "('CA03055', 'The Lost Man', 'Jane Harper', 'Flatiron Books', 2018, 'Mystery', 2, 'Department C - Shelf A03', 'ImageBooks\\\\CA03055.png')," +
+                                "('DD05077', 'The Water Dancer', 'Ta-Nehisi Coates', 'One World', 2019, 'Novel', 6, 'Department D - Shelf D05', 'ImageBooks\\\\DD05077.png')," +
+                                "('AA05017', 'The Underground Railroad', 'Colson Whitehead', 'Doubleday', 2016, 'Novel', 9, 'Department A - Shelf A05', 'ImageBooks\\\\AA05017.png')," +
+                                "('BC09026', 'The Cold War: A World History', 'Odd Arne Westad', 'Basic Books', 2017, 'History', 17, 'Department B - Shelf C09', 'ImageBooks\\\\BC09026.png')," +
+                                "('CC09087', 'Stalin: Waiting for Hitler, 1929-1941', 'Stephen Kotkin', 'Penguin Press', 2017, 'History', 10, 'Department C - Shelf C09', 'ImageBooks\\\\CC09087.png')," +
+                                "('DA03000', 'Educated', 'Tara Westover', 'Random House', 2018, 'Memoir', 3, 'Department D - Shelf A03', 'ImageBooks\\\\DA03000.png');";
             stmt.executeUpdate(strBook);
 
             String strBorrowing = "INSERT INTO BORROWING(BID, Price, Routine) VALUES " + 

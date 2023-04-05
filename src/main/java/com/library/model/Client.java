@@ -989,7 +989,7 @@ class ClientUI{
                 LibManagement.getCurrFrame().setVisible(true);
             }
         });
-        PanelBackground.add(ButtonUpdate);
+        PanelBackground.add(ButtonChange);
 
         JButton ButtonBackToUser = new JButton("Back");
         ButtonBackToUser.setBounds(480, 570, 100, 40);
@@ -1332,7 +1332,7 @@ public class Client extends User{
     private String bankName;
     private ArrayList<Book> listOfAttentedBooks;
 
-    Client(String id, String fullname, String phoneNumber, String emailAddress, String gender,
+    public Client(String id, String fullname, String phoneNumber, String emailAddress, String gender,
         java.util.Date createdDate, String address, String bankAccount, String bankName){   
         super(id, fullname, phoneNumber, emailAddress, gender, createdDate);
         this.address = address;

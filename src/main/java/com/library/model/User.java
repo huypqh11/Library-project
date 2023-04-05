@@ -5,7 +5,7 @@ import javax.swing.*;
 
 import javax.swing.JFrame;
 
-class User {
+public class User {
     protected String id;
     protected String fullname;
     protected String phoneNumber;
