@@ -1,18 +1,20 @@
 package com.library.model;
 
-import java.util.Date;
+import java.util.*;
+import javax.swing.*;
 
-public class Librarian extends User {
+class Librarian extends User{
     private String department;
 
     Librarian(String id, String fullname, String phoneNumber, String emailAddress,
-              Date timeCreate, String department){
-        super(id, fullname, phoneNumber, emailAddress, timeCreate);
+            String gender, Date createdDate, String department){
+        super(id, fullname, phoneNumber, emailAddress, gender, createdDate);
         this.department = department;
     }
 
-    public void getFormUI(){
-
+    @Override
+    public JFrame getDashBoard(){
+        return null;
     }
 
     public void getClientInfo(){
