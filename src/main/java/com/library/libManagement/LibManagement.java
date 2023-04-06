@@ -729,13 +729,13 @@ public class LibManagement{
                                     "ReturnDate DATE, " + 
                                     "TotalPrice int, " +
                                     "Quantity int, " +
+                                    "Status varchar(10) CHECK (Status = 'Borrowing' OR Status = 'Returned' OR Status = 'Waiting'), " +
                                     "PRIMARY KEY (TID));";
             stmt.executeUpdate(strCreateTableTransaction);
 
             String strCreateTableDetailTrans = "CREATE TABLE DETAILTRANS(" +
                                     "TID VARCHAR(255) NOT NULL, " +
                                     "BID VARCHAR(255) NOT NULL, " +
-                                    "Status varchar(10) CHECK (Status = 'Borrowing' OR Status = 'Returned' OR Status = null), " +
                                     "PRIMARY KEY (TID, BID));";
             stmt.executeUpdate(strCreateTableDetailTrans);
 
