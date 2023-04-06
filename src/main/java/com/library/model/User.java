@@ -19,7 +19,7 @@ public class User {
 
     public static void setInstance(User user) { instance = user; }
 
-    User(String id, String fullname, String phoneNumber, String emailAddress, String gender, java.util.Date createdDate){
+    public User(String id, String fullname, String phoneNumber, String emailAddress, String gender, java.util.Date createdDate){
         this.id = id;
         this.fullname = fullname;
         this.phoneNumber = phoneNumber;
