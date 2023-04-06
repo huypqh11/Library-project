@@ -802,7 +802,7 @@ public class LibManagement{
 
             String strFK_DetailTrans_Book = "ALTER TABLE DETAILTRANS " +
                                     "ADD CONSTRAINT FK_DETAILTRANS_BOOK " +
-                                    "FOREIGN KEY (BID) REFERENCES BOOK(BID);";
+                                    "FOREIGN KEY (BID) REFERENCES BORROWING(BID);";
             stmt.executeUpdate(strFK_DetailTrans_Book);
 
             String strFK_DetailTrans_Transaction = "ALTER TABLE DETAILTRANS " +
