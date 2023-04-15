@@ -1,5 +1,7 @@
 package com.library.model;
 
+import com.library.libManagement.*;
+
 import java.awt.*;
 import java.sql.*;
 import java.util.*;
@@ -31,10 +33,49 @@ public class Book {
         this.genre = genre;
         this.hasLeft = hasLeft;
         this.place = place;
-        this.rate = 0;
         this.borrowingPrice = borrowingPrice;
         this.routine = routine;
         this.pathImage = pathImage;
+
+        //Set rating for this book
+        this.rate = 0.0;
+        Connection connection = null;
+        Statement stmt = null;
+        ResultSet resultSet = null;
+        try {
+            connection = LibManagement.connect();
+            stmt = connection.createStatement();
+
+            String strQuerry = "SELECT AVG(Rate) a FROM REVIEW GROUP BY BID HAVING BID = '" + this.id + "'";
+            resultSet = stmt.executeQuery(strQuerry);
+
+            if (resultSet.next()){
+                this.rate = resultSet.getDouble("a");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            try {
+                stmt.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        
     }
 
     //Getter methods
@@ -61,4 +102,6 @@ public class Book {
     public int getRoutine() { return this.routine; }
 
     public String getPathImage() { return this.pathImage; }
+
+    public void setRating(double rating) { this.rate = rating; }
 }

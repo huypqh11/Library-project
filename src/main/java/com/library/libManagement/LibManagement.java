@@ -35,10 +35,10 @@ public class LibManagement{
         c.setLayout(null);
         // Font font = new Font("Arial", Font.BOLD, 27);
 
-        JButton ButtonAbout = new JButton("About");
-        ButtonAbout.setBounds(65, 74, 75, 30);
-        ButtonAbout.setBackground(Color.decode("#FFFDF6"));
-        c.add(ButtonAbout);
+        // JButton ButtonAbout = new JButton("About");
+        // ButtonAbout.setBounds(65, 74, 75, 30);
+        // ButtonAbout.setBackground(Color.decode("#FFFDF6"));
+        // c.add(ButtonAbout);
 
         JLabel LabelSignIn = new JLabel("Sign In");
         LabelSignIn.setBounds(180, 74, 85, 30);
@@ -100,11 +100,11 @@ public class LibManagement{
         });
         c.add(TextFieldPassWord);
 
-        JButton ButtonForgetPassWord = new JButton("Forget Password?");
-        ButtonForgetPassWord.setBounds(303, 410, 142, 35);
-        ButtonForgetPassWord.setBackground(Color.decode("#FFFDF6"));
-        ButtonForgetPassWord.setForeground(Color.decode("#C7C8C9"));
-        c.add(ButtonForgetPassWord);
+        // JButton ButtonForgetPassWord = new JButton("Forget Password?");
+        // ButtonForgetPassWord.setBounds(303, 410, 142, 35);
+        // ButtonForgetPassWord.setBackground(Color.decode("#FFFDF6"));
+        // ButtonForgetPassWord.setForeground(Color.decode("#C7C8C9"));
+        // c.add(ButtonForgetPassWord);
 
         JButton ButtonSignIn = new JButton("Sign In");
         ButtonSignIn.setBounds(64, 490, 400, 55);
@@ -138,6 +138,13 @@ public class LibManagement{
                             System.out.println("User does not exist");
                             JOptionPane.showMessageDialog(null, "Wrong username or password!");
                         } else {
+                            //Check error lowercase in database
+                            if (resultSet.getString("Username").equals(strUsername) == false){
+                                System.out.println("User does not exist");
+                                JOptionPane.showMessageDialog(null, "Wrong username or password!");
+                                return;
+                            }
+
                             int iTypeUser = resultSet.getInt("TypeUser");
                             User user = null;
 
@@ -725,9 +732,10 @@ public class LibManagement{
             String strCreateTableTransaction = "CREATE TABLE TRANSACTION(" +
                                     "TID VARCHAR(255) NOT NULL, " +
                                     "CID VARCHAR(5) NOT NULL, " +
-                                    "BorrowedDate DATE DEFAULT (CURRENT_DATE), " +
+                                    "BorrowedDate DATE, " +
                                     "ReturnDate DATE, " + 
                                     "TotalPrice int, " +
+                                    "TotalRoutine int, " +
                                     "Quantity int, " +
                                     "Status varchar(10) CHECK (Status = 'Borrowing' OR Status = 'Returned' OR Status = 'Waiting' OR Status = 'Cancel'), " +
                                     "PRIMARY KEY (TID));";
